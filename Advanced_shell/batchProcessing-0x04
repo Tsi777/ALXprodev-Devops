@@ -29,66 +29,9 @@ done
 # Wait for all background processes to complete
 wait
 
-echo "All data fetching processes completed."#!/bin/bash
-
-# Create a directory to store the Pokémon data if it doesn't exist
-mkdir -p pokemon_data
-
-# List of Pokémon to retrieve
-POKEMON_LIST=("bulbasaur" "ivysaur" "venusaur" "charmander" "charmeleon")
-
-# Function to fetch data for a single Pokémon
-fetch_pokemon_data() {
-    local POKE=$1
-    echo "Fetching data for $POKE..."
-    
-    RESPONSE=$(curl -s -w "%{http_code}" -o "pokemon_data/${POKE}.json" "https://pokeapi.co/api/v2/pokemon/${POKE}")
-
-    # Check if the request was successful
-    if [[ $RESPONSE -eq 200 ]]; then
-        echo "Saved data to pokemon_data/${POKE}.json ✅"
-    else
-        echo "Error: Failed to fetch data for $POKE. HTTP status code: $RESPONSE ❌"
-    fi
-}
-
-# Loop through each Pokémon and fetch data in parallel
-for POKE in "${POKEMON_LIST[@]}"; do
-    fetch_pokemon_data "$POKE" &
-done
-
-# Wait for all background processes to complete
-wait
-
-echo "All data fetching processes completed."#!/bin/bash
-
-# Create a directory to store the Pokémon data if it doesn't exist
-mkdir -p pokemon_data
-
-# List of Pokémon to retrieve
-POKEMON_LIST=("bulbasaur" "ivysaur" "venusaur" "charmander" "charmeleon")
-
-# Function to fetch data for a single Pokémon
-fetch_pokemon_data() {
-    local POKE=$1
-    echo "Fetching data for $POKE..."
-    
-    RESPONSE=$(curl -s -w "%{http_code}" -o "pokemon_data/${POKE}.json" "https://pokeapi.co/api/v2/pokemon/${POKE}")
-
-    # Check if the request was successful
-    if [[ $RESPONSE -eq 200 ]]; then
-        echo "Saved data to pokemon_data/${POKE}.json ✅"
-    else
-        echo "Error: Failed to fetch data for $POKE. HTTP status code: $RESPONSE ❌"
-    fi
-}
-
-# Loop through each Pokémon and fetch data in parallel
-for POKE in "${POKEMON_LIST[@]}"; do
-    fetch_pokemon_data "$POKE" &
-done
-
-# Wait for all background processes to complete
-wait
-
-echo "All data fetching processes completed."
+# Check for any background jobs
+if [ $(jobs -r | wc -l) -gt 0 ]; then
+    echo "There are still running jobs."
+else
+    echo "All data fetching processes completed."
+fi
