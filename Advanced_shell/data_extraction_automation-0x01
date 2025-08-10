@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Input JSON file
+INPUT_FILE="data.json"
+
+# Extract the required data using jq and format it
+output=$(jq -r '
+  .name as $name |
+  .weight as $weight |
+  .height as $height |
+  .types[0].type.name as $type |
+  "\($name) is of type \($type), weighs \($weight / 10)kg, and is \($height / 10)m tall."
+' "$INPUT_FILE")
+
+# Print the output
+echo "$output"
