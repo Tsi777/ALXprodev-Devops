@@ -3,14 +3,14 @@
 # Input JSON file
 INPUT_FILE="data.json"
 
-# Extract the required data using jq and format it
-output=$(jq -r '
-  .name as $name |
-  .weight as $weight |
-  .height as $height |
-  .types[0].type.name as $type |
-  "\($name) is of type \($type), weighs \($weight / 10)kg, and is \($height / 10)m tall."
-' "$INPUT_FILE")
+# Use jq to extract the required fields
+data=$(jq -r '.name, .height, .weight, .types[0].type.name' "$INPUT_FILE")
 
-# Print the output
-echo "$output"
+# Use awk and sed to format the output
+echo "$data" | awk '{
+    name = $1;
+    height = $2 / 10;  # Convert height from decimeters to meters
+    weight = $3 / 10;  # Convert weight from hectograms to kilograms
+    type = $4;
+    printf "%s is of type %s, weighs %.1fkg, and is %.1fm tall.\n", name, type, weight, height
+}'
