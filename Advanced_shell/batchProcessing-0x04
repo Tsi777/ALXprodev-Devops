@@ -31,7 +31,9 @@ wait
 
 # Check for any background jobs
 if [ $(jobs -r | wc -l) -gt 0 ]; then
-    echo "There are still running jobs."
+    echo "There are still running jobs. Cleaning up..."
+    # Kill all background jobs
+    kill $(jobs -p)
 else
     echo "All data fetching processes completed."
 fi
